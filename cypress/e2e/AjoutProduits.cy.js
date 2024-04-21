@@ -13,15 +13,23 @@ describe('Ajouter un produit au panier', () => {
         cy.get('#entry_217825').find('a[aria-controls="cart-total-drawer"]').click()
         cy.get('a[href="https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart"]').click()
         cy.contains('tr','HTC Touch HD')
-    
-    //Ajoutez autres tests cases pour la modification et la suppression de produits ajoutés au panier 
-      /*
-      it('modifier la quantitié d'un produit', () => {
-        .
-        .
-        .
-        .
-      });
-      */    
     })
+
+    //Ajoutez autres tests cases pour la modification et la suppression de produits ajoutés au panier 
+    it("modifier la quantitié d'un produit", async () => {
+        cy.get('#entry_217825').find('a[aria-controls="cart-total-drawer"]').click();
+        cy.get('a[href="https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart"]').click();
+        let unit_price = await cy.get('tbody > tr > :nth-child(5)').invoke('text');
+        unit_price = Number(unit_price.substring(1));
+        cy.get(':nth-child(4) > .input-group > .form-control').clear().type(2);
+        cy.get('button[title="Update"]').click();
+        cy.get('tbody > tr > :nth-child(6)').contains('$240.00');
+    });
+
+    it("supprimer un produit du panier", async () => {
+        cy.get('#entry_217825').find('a[aria-controls="cart-total-drawer"]').click();
+        cy.get('a[href="https://ecommerce-playground.lambdatest.io/index.php?route=checkout/cart"]').click();
+        cy.get('button[title="Remove"]').click();
+        cy.contains('tr', 'HTC Touch HD').should('not.exist');
+    });
   })
